@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useLanguage, LANGUAGES, LanguageCode } from '@/context/LanguageContext';
 import { getTranslations } from '@/utils/translations';
@@ -43,7 +44,14 @@ export default function Navbar() {
                 <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-2 group">
-                        <span className="text-2xl transition-transform duration-300 group-hover:rotate-12">🔑</span>
+                        <div className="relative w-8 h-8 transition-transform duration-300 group-hover:rotate-12">
+                            <Image
+                                src="/logo.png"
+                                alt="CityKey Logo"
+                                fill
+                                className="object-contain"
+                            />
+                        </div>
                         <span className="font-bold text-lg text-white group-hover:text-amber-400 transition-colors hidden sm:block">
                             {t.app_name}
                         </span>

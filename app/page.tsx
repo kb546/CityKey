@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLanguage, LANGUAGES, LanguageCode } from '@/context/LanguageContext';
 import { getTranslations } from '@/utils/translations';
 
@@ -20,7 +21,15 @@ export default function Home() {
       <div className="flex flex-col items-center justify-center min-h-screen px-4 py-12">
         {/* Logo & Title */}
         <div className="text-center mb-12">
-          <div className="text-7xl mb-4">🔑</div>
+          <div className="relative w-32 h-32 mx-auto mb-6">
+            <Image
+              src="/logo.png"
+              alt="CityKey Logo"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
           <h1 className="text-5xl font-bold text-white mb-3">
             {t.app_name}
           </h1>

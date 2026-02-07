@@ -148,15 +148,17 @@ npm run lint     # Run ESLint
 
 ---
 
-## 🚀 Deployment
+## 🚀 Deployment Guide
 
-### Vercel (Recommended)
+For a full guide, see [DEPLOY.md](file:///Users/samuel/Documents/CityKey/DEPLOY.md).
 
-1. Push your code to GitHub
-2. Go to [vercel.com](https://vercel.com)
-3. Import your repository
-4. Add environment variables (`OPENAI_API_KEY`)
-5. Deploy!
+### Quick Steps for Vercel
+1. Go to **[vercel.com/new](https://vercel.com/new)**
+2. Import `CityKey` repository
+3. Add Environment Variables:
+   - `OPENAI_API_KEY`: `sk-proj-...` (from your .env.local)
+   - `LINGODOTDEV_API_KEY`: `api_...`
+4. Click **Deploy**
 
 ---
 
