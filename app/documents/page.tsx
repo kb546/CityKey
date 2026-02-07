@@ -4,13 +4,7 @@ import { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { getTranslations } from '@/utils/translations';
 import { explainDocument } from '@/utils/ai';
-import Link from 'next/link';
-
-interface Section {
-    id: string;
-    title: string;
-    content: string;
-}
+import Navbar from '@/components/Navbar';
 
 export default function DocumentsPage() {
     const { language, dir } = useLanguage();
@@ -53,25 +47,18 @@ export default function DocumentsPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800" dir={dir}>
-            {/* Header */}
-            <header className="flex items-center justify-between px-4 py-3 bg-slate-800/50 border-b border-slate-700">
-                <Link href="/" className="flex items-center gap-2 text-white hover:text-amber-400 transition-colors">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={dir === 'rtl' ? "M9 5l7 7-7 7" : "M15 19l-7-7 7-7"} />
-                    </svg>
-                    <span className="text-sm">{t.nav_home}</span>
-                </Link>
-                <h1 className="text-lg font-semibold text-white flex items-center gap-2">
-                    <span className="text-2xl">📄</span>
-                    {t.doc_title}
-                </h1>
-                <div className="w-20"></div>
-            </header>
+        <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 pb-20 md:pb-8" dir={dir}>
+            <Navbar />
 
             <main className="max-w-4xl mx-auto p-4 space-y-6">
+                {/* Page Header */}
+                <div className="flex items-center gap-3 mb-2">
+                    <span className="text-3xl">📄</span>
+                    <h1 className="text-2xl font-bold text-white">{t.doc_title}</h1>
+                </div>
+
                 {/* Document Input Section */}
-                <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
+                <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700 shadow-xl">
                     <label className="block text-slate-300 mb-3 font-medium">
                         {t.doc_paste_label}
                     </label>
@@ -79,14 +66,14 @@ export default function DocumentsPage() {
                         value={documentText}
                         onChange={(e) => setDocumentText(e.target.value)}
                         placeholder="الصق النص العربي هنا..."
-                        className="w-full h-48 bg-slate-700 text-white rounded-xl p-4 outline-none focus:ring-2 focus:ring-amber-400 placeholder:text-slate-400 resize-none"
+                        className="w-full h-48 bg-slate-700/80 text-white rounded-xl p-4 outline-none focus:ring-2 focus:ring-amber-400 placeholder:text-slate-400 resize-none border border-slate-600 transition-all duration-200"
                         dir="rtl"
                     />
 
                     <div className="flex flex-wrap gap-3 mt-4">
                         <button
                             onClick={loadSampleContract}
-                            className="flex items-center gap-2 bg-slate-600 hover:bg-slate-500 text-white rounded-full px-5 py-2.5 font-medium transition-colors"
+                            className="flex items-center gap-2 bg-slate-600 hover:bg-slate-500 text-white rounded-full px-5 py-2.5 font-medium transition-all duration-200 shadow-md hover:shadow-lg"
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -97,7 +84,7 @@ export default function DocumentsPage() {
                         <button
                             onClick={handleExplain}
                             disabled={!documentText.trim() || isLoading}
-                            className="flex items-center gap-2 bg-amber-500 hover:bg-amber-400 disabled:bg-slate-600 disabled:cursor-not-allowed text-white rounded-full px-5 py-2.5 font-medium transition-colors"
+                            className="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 disabled:from-slate-600 disabled:to-slate-600 disabled:cursor-not-allowed text-white rounded-full px-5 py-2.5 font-medium transition-all duration-200 shadow-md hover:shadow-lg"
                         >
                             {isLoading ? (
                                 <>
@@ -122,14 +109,14 @@ export default function DocumentsPage() {
 
                 {/* Explanation Section */}
                 {hasExplained && explanation && (
-                    <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700 space-y-4">
+                    <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700 space-y-4 shadow-xl animate-in slide-in-from-bottom-4 duration-300">
                         <h2 className="text-xl font-semibold text-white flex items-center gap-2">
                             <span className="text-2xl">✨</span>
                             {t.doc_section}
                         </h2>
 
                         <div className="prose prose-invert max-w-none">
-                            <div className="bg-slate-700/50 rounded-xl p-5 text-slate-200 whitespace-pre-wrap leading-relaxed">
+                            <div className="bg-slate-700/50 rounded-xl p-5 text-slate-200 whitespace-pre-wrap leading-relaxed border border-slate-600/50">
                                 {explanation}
                             </div>
                         </div>
