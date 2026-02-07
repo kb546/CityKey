@@ -16,12 +16,17 @@ export default function Home() {
   const languageList = Object.entries(LANGUAGES) as [LanguageCode, typeof LANGUAGES[LanguageCode]][];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900" dir={dir}>
+    <div className="min-h-screen bg-aurora text-slate-100 overflow-hidden" dir={dir}>
+      {/* Decorative blobs */}
+      <div className="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-[100px] animate-float" />
+      <div className="fixed bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[120px] animate-float" style={{ animationDelay: '-2s' }} />
+
       {/* Hero Section */}
-      <div className="flex flex-col items-center justify-center min-h-screen px-4 py-12">
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-12">
+
         {/* Logo & Title */}
-        <div className="text-center mb-12">
-          <div className="relative w-32 h-32 mx-auto mb-6">
+        <div className="text-center mb-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
+          <div className="relative w-40 h-40 mx-auto mb-8 drop-shadow-2xl animate-float">
             <Image
               src="/logo.png"
               alt="CityKey Logo"
@@ -30,38 +35,42 @@ export default function Home() {
               priority
             />
           </div>
-          <h1 className="text-5xl font-bold text-white mb-3">
-            {t.app_name}
+          <h1 className="text-6xl font-black mb-4 tracking-tight">
+            <span className="text-white">City</span>
+            <span className="gradient-text">Key</span>
           </h1>
-          <p className="text-xl text-slate-300">
+          <p className="text-xl text-slate-400 font-light tracking-wide max-w-md mx-auto">
             {t.tagline}
           </p>
         </div>
 
         {/* Language Selection */}
-        <div className="w-full max-w-lg">
-          <h2 className="text-center text-slate-400 mb-6 text-lg">
+        <div className="w-full max-w-2xl mb-16 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
+          <p className="text-center text-slate-500 mb-6 text-sm uppercase tracking-widest font-semibold">
             {t.select_language}
-          </h2>
+          </p>
 
-          <div className="grid grid-cols-2 gap-3">
-            {languageList.map(([code, info]) => (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {languageList.map(([code, info], i) => (
               <button
                 key={code}
                 onClick={() => handleLanguageSelect(code)}
                 className={`
-                  relative p-4 rounded-xl font-medium transition-all duration-200
+                  relative group overflow-hidden p-4 rounded-2xl transition-all duration-300 border
                   ${language === code
-                    ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/25 scale-105'
-                    : 'bg-slate-700/50 text-slate-200 hover:bg-slate-700 hover:scale-102 border border-slate-600'
+                    ? 'border-amber-500/50 bg-amber-500/10 shadow-[0_0_20px_rgba(245,158,11,0.2)]'
+                    : 'border-white/5 bg-white/5 hover:bg-white/10 hover:border-white/10 hover:-translate-y-1'
                   }
                 `}
               >
-                <span className="text-lg" dir={info.dir}>
-                  {info.nativeName}
-                </span>
+                <div className="relative z-10 flex flex-col items-center gap-2">
+                  <span className="text-2xl filter drop-shadow-md">{info.flag}</span>
+                  <span className={`text-sm font-medium ${language === code ? 'text-amber-400' : 'text-slate-300 group-hover:text-white'}`} dir={info.dir}>
+                    {info.nativeName}
+                  </span>
+                </div>
                 {language === code && (
-                  <span className="absolute top-2 right-2 w-2 h-2 bg-white rounded-full"></span>
+                  <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/10 to-transparent" />
                 )}
               </button>
             ))}
@@ -69,42 +78,36 @@ export default function Home() {
         </div>
 
         {/* Navigation Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-2xl mt-12">
-          <Link
-            href="/chat"
-            className="group bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 hover:border-amber-500/50 rounded-2xl p-6 text-center transition-all duration-200 hover:scale-105"
-          >
-            <div className="text-4xl mb-3">💬</div>
-            <h3 className="text-lg font-semibold text-white group-hover:text-amber-400 transition-colors">
-              {t.nav_chat}
-            </h3>
-          </Link>
-
-          <Link
-            href="/documents"
-            className="group bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 hover:border-amber-500/50 rounded-2xl p-6 text-center transition-all duration-200 hover:scale-105"
-          >
-            <div className="text-4xl mb-3">📄</div>
-            <h3 className="text-lg font-semibold text-white group-hover:text-amber-400 transition-colors">
-              {t.nav_documents}
-            </h3>
-          </Link>
-
-          <Link
-            href="/checklist"
-            className="group bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 hover:border-amber-500/50 rounded-2xl p-6 text-center transition-all duration-200 hover:scale-105"
-          >
-            <div className="text-4xl mb-3">✅</div>
-            <h3 className="text-lg font-semibold text-white group-hover:text-amber-400 transition-colors">
-              {t.nav_checklist}
-            </h3>
-          </Link>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-3xl animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
+          {[
+            { href: '/chat', icon: '💬', label: t.nav_chat, desc: 'AI Assistant' },
+            { href: '/documents', icon: '📄', label: t.nav_documents, desc: 'Docs Explainer' },
+            { href: '/checklist', icon: '✅', label: t.nav_checklist, desc: 'Step-by-step' },
+          ].map((item, i) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="group relative glass-premium p-8 rounded-3xl text-center transition-all duration-300 hover:scale-105 hover:bg-slate-800/60 hover:border-amber-500/30"
+            >
+              <div className="text-5xl mb-4 transform transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
+                {item.icon}
+              </div>
+              <h3 className="text-lg font-bold text-white mb-1 group-hover:text-amber-400 transition-colors">
+                {item.label}
+              </h3>
+              <p className="text-xs text-slate-500 font-medium uppercase tracking-wider block">
+                {item.desc}
+              </p>
+            </Link>
+          ))}
         </div>
 
-        {/* Powered by Lingo.dev */}
-        <div className="mt-16 text-slate-500 text-sm flex items-center gap-2">
-          <span>🌐</span>
-          <span>{t.powered_by}</span>
+        {/* Footer */}
+        <div className="mt-16 text-slate-600 text-xs font-medium tracking-widest uppercase flex items-center gap-2 animate-in fade-in delay-500 opacity-60 hover:opacity-100 transition-opacity">
+          <span>POWERED BY</span>
+          <span className="flex items-center gap-1 text-slate-400">
+            LINGO<span className="text-amber-500">.</span>DEV
+          </span>
         </div>
       </div>
     </div>

@@ -47,64 +47,67 @@ export default function DocumentsPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 pb-20 md:pb-8" dir={dir}>
+        <div className="min-h-screen bg-aurora pb-20 md:pb-8" dir={dir}>
             <Navbar />
-
-            <main className="max-w-4xl mx-auto p-4 space-y-6">
+            <main className="max-w-4xl mx-auto p-4 space-y-6 pt-24 animate-in fade-in slide-in-from-bottom-8 duration-700">
                 {/* Page Header */}
-                <div className="flex items-center gap-3 mb-2">
-                    <span className="text-3xl">📄</span>
-                    <h1 className="text-2xl font-bold text-white">{t.doc_title}</h1>
+                <div className="flex items-center gap-4 mb-6">
+                    <div className="w-16 h-16 bg-amber-500/10 rounded-2xl flex items-center justify-center glass-premium animate-float">
+                        <span className="text-4xl">📄</span>
+                    </div>
+                    <div>
+                        <h1 className="text-3xl font-bold text-white tracking-tight">{t.doc_title}</h1>
+                        <p className="text-slate-400 text-sm mt-1">AI-powered document simplifier</p>
+                    </div>
                 </div>
 
-                {/* Document Input Section */}
-                <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700 shadow-xl">
-                    <label className="block text-slate-300 mb-3 font-medium">
-                        {t.doc_paste_label}
-                    </label>
-                    <textarea
-                        value={documentText}
-                        onChange={(e) => setDocumentText(e.target.value)}
-                        placeholder="الصق النص العربي هنا..."
-                        className="w-full h-48 bg-slate-700/80 text-white rounded-xl p-4 outline-none focus:ring-2 focus:ring-amber-400 placeholder:text-slate-400 resize-none border border-slate-600 transition-all duration-200"
-                        dir="rtl"
-                    />
+                {/* Input Section */}
+                <div className="glass-premium rounded-3xl p-6 shadow-xl relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none" />
 
-                    <div className="flex flex-wrap gap-3 mt-4">
-                        <button
-                            onClick={loadSampleContract}
-                            className="flex items-center gap-2 bg-slate-600 hover:bg-slate-500 text-white rounded-full px-5 py-2.5 font-medium transition-all duration-200 shadow-md hover:shadow-lg"
-                        >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                            {t.doc_load_sample}
-                        </button>
+                    <form onSubmit={handleExplain} className="space-y-4 relative z-10">
+                        <textarea
+                            value={documentText}
+                            onChange={(e) => setDocumentText(e.target.value)}
+                            placeholder={t.doc_paste_label}
+                            className="w-full h-40 bg-slate-900/50 rounded-xl p-4 text-white placeholder-slate-500 border border-white/10 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition-all resize-none"
+                            dir={language === 'ar' || language === 'ur' ? 'rtl' : 'ltr'}
+                        />
+                        <div className="flex justify-end">
+                            <button
+                                type="submit"
+                                disabled={isLoading || !documentText.trim()}
+                                className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-amber-900/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                        </svg>
+                                        <span>{t.chat_thinking}...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <span>{t.doc_explain}</span>
+                                        <span className="text-xl">✨</span>
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    </form>
+                </div>
 
-                        <button
-                            onClick={handleExplain}
-                            disabled={!documentText.trim() || isLoading}
-                            className="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 disabled:from-slate-600 disabled:to-slate-600 disabled:cursor-not-allowed text-white rounded-full px-5 py-2.5 font-medium transition-all duration-200 shadow-md hover:shadow-lg"
-                        >
-                            {isLoading ? (
-                                <>
-                                    <div className="flex gap-1">
-                                        <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                                        <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                                        <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
-                                    </div>
-                                    <span>{t.chat_thinking}</span>
-                                </>
-                            ) : (
-                                <>
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                    </svg>
-                                    {t.doc_explain}
-                                </>
-                            )}
-                        </button>
-                    </div>
+                <div className="flex flex-wrap gap-3 mt-4">
+                    <button
+                        onClick={loadSampleContract}
+                        className="flex items-center gap-2 bg-slate-600 hover:bg-slate-500 text-white rounded-full px-5 py-2.5 font-medium transition-all duration-200 shadow-md hover:shadow-lg"
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        {t.doc_load_sample}
+                    </button>
                 </div>
 
                 {/* Explanation Section */}
@@ -134,5 +137,6 @@ export default function DocumentsPage() {
                 )}
             </main>
         </div>
+
     );
 }

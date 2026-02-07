@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { getTranslations } from '@/utils/translations';
 import { sendChatMessage } from '@/utils/ai';
+import ReactMarkdown from 'react-markdown';
 import Navbar from '@/components/Navbar';
 
 interface Message {
@@ -85,41 +86,60 @@ export default function ChatPage() {
         }
     };
 
+    const history = messages; // Alias messages to history for the new rendering logic
+
     return (
-        <div className="flex flex-col min-h-screen bg-gradient-to-b from-slate-900 to-slate-800" dir={dir}>
+        <div className="flex flex-col min-h-screen bg-aurora" dir={dir}>
             <Navbar />
 
             {/* Messages - adjusted for navbar spacing */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-36 md:pb-24">
-                {messages.map((message) => (
+            <div className="flex-1 overflow-y-auto p-4 space-y-6 pb-40 md:pb-32 pt-24">
+                {/* Welcome Message if empty */}
+                {history.length === 0 && (
+                    <div className="flex flex-col items-center justify-center min-h-[50vh] text-center space-y-4 animate-in fade-in duration-700">
+                        <div className="w-20 h-20 bg-amber-500/10 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(245,158,11,0.2)] animate-float">
+                            <span className="text-4xl">💬</span>
+                        </div>
+                        <h2 className="text-2xl font-bold text-white">
+                            {t.chat_welcome}
+                        </h2>
+                        <p className="text-slate-400 max-w-md">
+                            Ask me anything about documents, fees, or locations in Abu Dhabi.
+                        </p>
+                    </div>
+                )}
+
+                {history.map((msg, idx) => (
                     <div
-                        key={message.id}
-                        className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                        key={idx}
+                        className={`flex w-full ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-4 duration-500`}
                     >
                         <div
-                            className={`max-w-[80%] rounded-2xl px-4 py-3 shadow-lg transition-all duration-200 ${message.role === 'user'
-                                ? 'bg-gradient-to-br from-amber-500 to-amber-600 text-white rounded-br-sm'
-                                : 'bg-slate-700/80 text-slate-100 rounded-bl-sm border border-slate-600/50'
-                                }`}
+                            className={`
+                                max-w-[85%] md:max-w-[70%] p-4 rounded-2xl shadow-lg relative
+                                ${msg.role === 'user'
+                                    ? 'bg-gradient-to-br from-amber-500 to-orange-600 text-white rounded-tr-sm'
+                                    : 'glass-premium text-gray-100 rounded-tl-sm border-white/5'
+                                }
+                            `}
                         >
-                            <div className="whitespace-pre-wrap text-sm leading-relaxed">
-                                {message.content}
+                            <div className="prose prose-invert prose-sm md:prose-base max-w-none">
+                                <ReactMarkdown>
+                                    {msg.content}
+                                </ReactMarkdown>
                             </div>
+                            {/* Tiny glowing dot decoration */}
+                            <div className={`absolute top-0 w-2 h-2 rounded-full ${msg.role === 'user' ? 'right-0 -mr-1 -mt-1 bg-white/50' : 'left-0 -ml-1 -mt-1 bg-amber-500/50'}`} />
                         </div>
                     </div>
                 ))}
 
                 {isLoading && (
-                    <div className="flex justify-start">
-                        <div className="bg-slate-700/80 text-slate-100 rounded-2xl rounded-bl-sm px-4 py-3 border border-slate-600/50">
-                            <div className="flex items-center gap-2">
-                                <div className="flex gap-1">
-                                    <span className="w-2 h-2 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                                    <span className="w-2 h-2 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                                    <span className="w-2 h-2 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
-                                </div>
-                                <span className="text-sm text-slate-400">{t.chat_thinking}</span>
-                            </div>
+                    <div className="flex justify-start animate-in fade-in">
+                        <div className="glass-premium p-4 rounded-2xl rounded-tl-sm flex items-center gap-2">
+                            <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce delay-0" />
+                            <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce delay-150" />
+                            <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce delay-300" />
                         </div>
                     </div>
                 )}
@@ -127,30 +147,39 @@ export default function ChatPage() {
                 <div ref={messagesEndRef} />
             </div>
 
-            {/* Input - fixed at bottom, above mobile nav */}
-            <div className="fixed bottom-16 md:bottom-0 left-0 right-0 p-4 bg-slate-900/95 backdrop-blur-md border-t border-slate-700/50">
-                <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
-                    <div className="flex gap-2">
+            {/* Input - fixed at bottom */}
+            <div className="fixed bottom-20 md:bottom-6 left-0 right-0 p-4 z-40">
+                <div className="max-w-4xl mx-auto">
+                    <form
+                        onSubmit={handleSubmit}
+                        className="relative flex items-center gap-2 glass-premium p-2 rounded-full shadow-2xl shadow-black/50 border-white/10"
+                    >
                         <input
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             placeholder={t.chat_placeholder}
-                            className="flex-1 bg-slate-800 text-white rounded-full px-5 py-3 outline-none focus:ring-2 focus:ring-amber-400 placeholder:text-slate-400 border border-slate-700 transition-all duration-200"
                             disabled={isLoading}
+                            className="flex-1 bg-transparent border-none focus:ring-0 text-white placeholder-slate-400 px-6 py-3"
                         />
                         <button
                             type="submit"
                             disabled={isLoading || !input.trim()}
-                            className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 disabled:from-slate-600 disabled:to-slate-600 disabled:cursor-not-allowed text-white rounded-full px-6 py-3 font-medium transition-all duration-200 flex items-center gap-2 shadow-lg"
+                            className="p-3 bg-amber-500 hover:bg-amber-400 rounded-full text-white disabled:opacity-50 disabled:cursor-not-allowed transition-transform hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(245,158,11,0.5)]"
                         >
-                            <span className="hidden sm:block">{t.chat_send}</span>
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={dir === 'rtl' ? "M10 19l-7-7m0 0l7-7m-7 7h18" : "M14 5l7 7m0 0l-7 7m7-7H3"} />
-                            </svg>
+                            {isLoading ? (
+                                <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            ) : (
+                                <svg className={`w-5 h-5 ${dir === 'rtl' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                </svg>
+                            )}
                         </button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     );

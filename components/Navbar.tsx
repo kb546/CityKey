@@ -38,36 +38,37 @@ export default function Navbar() {
         <>
             {/* Top Header Bar - Desktop & Mobile */}
             <header
-                className="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-700/50"
+                className="fixed top-0 left-0 right-0 z-50 glass-premium border-b-0"
                 dir={dir}
             >
-                <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+                <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
                     {/* Logo */}
-                    <Link href="/" className="flex items-center gap-2 group">
-                        <div className="relative w-8 h-8 transition-transform duration-300 group-hover:rotate-12">
+                    <Link href="/" className="flex items-center gap-3 group">
+                        <div className="relative w-10 h-10 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110">
                             <Image
                                 src="/logo.png"
                                 alt="CityKey Logo"
                                 fill
-                                className="object-contain"
+                                className="object-contain drop-shadow-lg"
                             />
                         </div>
-                        <span className="font-bold text-lg text-white group-hover:text-amber-400 transition-colors hidden sm:block">
-                            {t.app_name}
+                        <span className="font-bold text-xl tracking-tight hidden sm:block">
+                            <span className="text-white">City</span>
+                            <span className="text-amber-400">Key</span>
                         </span>
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <nav className="hidden md:flex items-center gap-1">
+                    <nav className="hidden md:flex items-center gap-2">
                         {navItems.slice(1).map((item) => (
                             <Link
                                 key={item.href}
                                 href={item.href}
                                 className={`
-                  px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200
+                  px-4 py-2 rounded-full font-medium text-sm transition-all duration-300
                   ${isActive(item.href)
-                                        ? 'bg-amber-500/20 text-amber-400'
-                                        : 'text-slate-300 hover:text-white hover:bg-slate-800'
+                                        ? 'bg-amber-500 text-white shadow-[0_0_15px_rgba(245,158,11,0.4)]'
+                                        : 'text-slate-300 hover:text-white hover:bg-white/10'
                                     }
                 `}
                             >

@@ -4,14 +4,14 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 
 // Supported languages with their metadata
 export const LANGUAGES = {
-    en: { name: 'English', nativeName: 'English', dir: 'ltr' },
-    ar: { name: 'Arabic', nativeName: 'العربية', dir: 'rtl' },
-    hi: { name: 'Hindi', nativeName: 'हिन्दी', dir: 'ltr' },
-    ur: { name: 'Urdu', nativeName: 'اردو', dir: 'rtl' },
-    tl: { name: 'Tagalog', nativeName: 'Tagalog', dir: 'ltr' },
-    fr: { name: 'French', nativeName: 'Français', dir: 'ltr' },
-    bn: { name: 'Bengali', nativeName: 'বাংলা', dir: 'ltr' },
-    ru: { name: 'Russian', nativeName: 'Русский', dir: 'ltr' },
+    en: { name: 'English', nativeName: 'English', dir: 'ltr', flag: '🇬🇧' },
+    ar: { name: 'Arabic', nativeName: 'العربية', dir: 'rtl', flag: '🇦🇪' },
+    hi: { name: 'Hindi', nativeName: 'हिन्दी', dir: 'ltr', flag: '🇮🇳' },
+    ur: { name: 'Urdu', nativeName: 'اردو', dir: 'rtl', flag: '🇵🇰' },
+    tl: { name: 'Tagalog', nativeName: 'Tagalog', dir: 'ltr', flag: '🇵🇭' },
+    fr: { name: 'French', nativeName: 'Français', dir: 'ltr', flag: '🇫🇷' },
+    bn: { name: 'Bengali', nativeName: 'বাংলা', dir: 'ltr', flag: '🇧🇩' },
+    ru: { name: 'Russian', nativeName: 'Русский', dir: 'ltr', flag: '🇷🇺' },
 } as const;
 
 export type LanguageCode = keyof typeof LANGUAGES;
